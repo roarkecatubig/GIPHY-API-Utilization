@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GIPHS API Utilization</title>
+  <style type="text/css">
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>GIPHS Search</h1>
+    <!-- <img src= "https://media1.giphy.com/media/B6Jr28VwfxUFa/200.gif"> -->
+    <!-- Movies will Get Dumped Dere -->
+    <div id="GIPHS-view"></div>
+
+    <!-- Rendered Buttons will get Dumped Here  -->
+    <div id="buttons-view"></div>
+
+    <form id="GIPHS-form">
+      <label for="GIPHS-input">Add a GIPH</label>
+      <input type="text" id="GIPHS-input">
+      <br>
+
+      <!-- Button triggers new movie to be added -->
+      <input id="add-GIPHS" type="submit" value="Add a GIPH">
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      // Initial array of movies
+      var GIPHSarray = ["Darth Vader", "Emperor Palpatine", "Naruto", "Kaiba"];
+
+    //   for (i=0; i < GIPHSarray.length; i++) {
+    //       if (GIPHSarray[i].includes(" ") === true) {
+    //           GIPHSarray[i] = GIPHSarray[i].replace(" ", "+")
+    //       }
+    //   }
+
+      console.log(GIPHSarray);
+
+      // displayMovieInfo function re-renders the HTML to display the appropriate content
+      function displayGIPHInfo() {
+
+        var GIPH = $(this).attr("data-name");
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + GIPH + "&api_key=qHQ8d2mSYhfkuVWOa1duti7nFRKF4Zdp&limit=10"
+        console.log(queryURL)
+
+        // Creating an AJAX call for the specific movie button being clicked
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+
+            $("#GIPHS-view").empty();
+            for (i=0; i < response.data.length; i++) {
+          // Creating a div to hold the movie
+          var GIPHDiv = $("<div class='GIPH'>");
+
+          // Storing the rating data
+          var rating = response.data[i].rating
+          console.log(response.data[i].rating)
+
+          // Creating an element to have the rating displayed
+          var pOne = $("<p>").text("Rating: " + rating);
+
+          // Displaying the rating
+          GIPHDiv.append(pOne);
+
+          // Storing the release year
+        //   var released = response.Released;
+
+          // Creating an element to hold the release year
+        //   var pTwo = $("<p>").text("Released: " + released);
+
+          // Displaying the release year
+        //   movieDiv.append(pTwo);
+
+          // Storing the plot
+        //   var plot = response.Plot;
+
+          // Creating an element to hold the plot
+        //   var pThree = $("<p>").text("Plot: " + plot);
+
+          // Appending the plot
+        //   movieDiv.append(pThree);
+
+          // Retrieving the URL for the image
+          var imgURL = response.data[i].images.fixed_height.url;
+
+          // Creating an element to hold the image
+          var image = $("<img>").attr("src", imgURL);
+
+          // Appending the image
+          GIPHDiv.append(image);
+
+          // Putting the entire movie above the previous movies
+          $("#GIPHS-view").prepend(GIPHDiv);
+
+            }
+        });
+
+      }
+
+      // Function for displaying movie data
+      function renderButtons() {
+
+        // Deleting the movies prior to adding new movies
+        // (this is necessary otherwise you will have repeat buttons)
+        $("#buttons-view").empty();
+
+        // Looping through the array of movies
+        for (var i = 0; i < GIPHSarray.length; i++) {
+            if (GIPHSarray[i].includes(" ") === true) {
+              GIPHSarray[i] = GIPHSarray[i].replace(" ", "+")
+            }   
+            // Then dynamicaly generating buttons for each movie in the array
+            // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+            var a = $("<button>");
+            // Adding a class of movie-btn to our button
+            a.addClass("GIPH-btn");
+            // Adding a data-attribute
+            a.attr("data-name", GIPHSarray[i]);
+            // Providing the initial button text
+            a.text(GIPHSarray[i]);
+            // Adding the button to the buttons-view div
+            $("#buttons-view").append(a);
+            }
+
+        }
+    
+
+      // This function handles events where a movie button is clicked
+      $("#add-GIPHS").on("click", function(event) {
+        event.preventDefault();
+        // This line grabs the input from the textbox
+        var GIPH = $("#GIPHS-input").val().trim();
+
+        // Adding movie from the textbox to our array
+        GIPHSarray.push(GIPH);
+
+        // Calling renderButtons which handles the processing of our movie array
+        renderButtons();
+      });
+
+      // Adding a click event listener to all elements with a class of "movie-btn"
+      $(document).on("click", ".GIPH-btn", displayGIPHInfo);
+
+      // Calling the renderButtons function to display the intial buttons
+      renderButtons();
+    </script>
+  </div>
+</body>
+
+</html>
