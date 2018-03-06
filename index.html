@@ -18,10 +18,9 @@
 
   <div class="container">
     <h1>GIPHS Search</h1>
-    <!-- <img src= "https://media1.giphy.com/media/B6Jr28VwfxUFa/200.gif"> -->
     <!-- Movies will Get Dumped Dere -->
     <div id="GIPHS-view"></div>
-
+    <img id="test" src="https://media2.giphy.com/media/LSmULmByAQHQs/200_s.gif">
     <!-- Rendered Buttons will get Dumped Here  -->
     <div id="buttons-view"></div>
 
@@ -36,7 +35,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
-      // Initial array of movies
+      // Initial array of GIPHs to search for
       var GIPHSarray = ["Darth Vader", "Emperor Palpatine", "Naruto", "Kaiba"];
 
     //   for (i=0; i < GIPHSarray.length; i++) {
@@ -44,17 +43,21 @@
     //           GIPHSarray[i] = GIPHSarray[i].replace(" ", "+")
     //       }
     //   }
-
+      $("#test").on("click", function() {
+        $("#test").attr("src", "https://media2.giphy.com/media/LSmULmByAQHQs/200.gif");
+      });
+      
       console.log(GIPHSarray);
 
       // displayMovieInfo function re-renders the HTML to display the appropriate content
       function displayGIPHInfo() {
 
         var GIPH = $(this).attr("data-name");
+        console.log("Pulled info from the button")
         var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + GIPH + "&api_key=qHQ8d2mSYhfkuVWOa1duti7nFRKF4Zdp&limit=10"
         console.log(queryURL)
 
-        // Creating an AJAX call for the specific movie button being clicked
+        // Creating an AJAX call for the specific GIPH button being clicked
         $.ajax({
           url: queryURL,
           method: "GET"
@@ -75,29 +78,21 @@
           // Displaying the rating
           GIPHDiv.append(pOne);
 
-          // Storing the release year
-        //   var released = response.Released;
-
-          // Creating an element to hold the release year
-        //   var pTwo = $("<p>").text("Released: " + released);
-
-          // Displaying the release year
-        //   movieDiv.append(pTwo);
-
-          // Storing the plot
-        //   var plot = response.Plot;
-
-          // Creating an element to hold the plot
-        //   var pThree = $("<p>").text("Plot: " + plot);
-
-          // Appending the plot
-        //   movieDiv.append(pThree);
-
           // Retrieving the URL for the image
-          var imgURL = response.data[i].images.fixed_height.url;
+          var imgURL = response.data[i].images.fixed_height_still.url;
+          var animatedURL = response.data[i].images.fixed_height.url;
+        
+        // $(document).on("click", function() {
+        //   $(".animate").attr("src", animatedURL);
+        // });
 
           // Creating an element to hold the image
-          var image = $("<img>").attr("src", imgURL);
+          var image = $("<img class='animate'>").attr("src", imgURL);
+          image.attr("data-name", GIPHSarray[i]);
+
+          $(this).on("click", function() {
+            image.src = animatedURL
+          });
 
           // Appending the image
           GIPHDiv.append(image);
@@ -117,7 +112,7 @@
         // (this is necessary otherwise you will have repeat buttons)
         $("#buttons-view").empty();
 
-        // Looping through the array of movies
+        // Looping through the array of GIPHS
         for (var i = 0; i < GIPHSarray.length; i++) {
             if (GIPHSarray[i].includes(" ") === true) {
               GIPHSarray[i] = GIPHSarray[i].replace(" ", "+")
@@ -138,7 +133,8 @@
         }
     
 
-      // This function handles events where a movie button is clicked
+      // This function handles events where a GIPH button is clicked
+      
       $("#add-GIPHS").on("click", function(event) {
         event.preventDefault();
         // This line grabs the input from the textbox
