@@ -1,0 +1,48 @@
+button,
+form,
+input {
+  margin: 10px;
+}
+
+body {
+    background-image: url("../images/gplaypattern.png")
+}
+
+.animate {
+    margin-bottom: 10px;
+}
+
+.btn {
+    font-family: 'Walter Turncoat', cursive;
+}
+
+#panelHeading {
+    text-align: center;
+    font-family: 'Mouse Memoirs', sans-serif;
+    font-size: x-large;
+    background-color: hotpink;
+    color: white;
+}
+
+h1 {
+    font-family: 'Mouse Memoirs', sans-serif;
+    text-align: center;
+}
+
+#mainHeading {
+    background-image: url("../images/90spanelheadingbackground.jpg");
+    background-repeat: repeat;
+    border-width: 6px;
+    border-style: double;
+    border-color: black;
+
+}
+
+.panel-body {
+    background-image: url("../images/90sbackground.jpg")
+}
+
+label {
+    font-family: 'Mouse Memoirs', sans-serif;
+    font-size: x-large;
+}

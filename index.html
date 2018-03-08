@@ -3,25 +3,28 @@
 
 <head>
   <meta charset="utf-8">
-  <title>GIPHS API Utilization</title>
-  <style type="text/css">
-    button,
-    div,
-    form,
-    input {
-      margin: 10px;
-    }
-  </style>
+  <title>GIPHY API Utilization</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Mouse+Memoirs|Walter+Turncoat" rel="stylesheet">
+
 </head>
 
 <body>
 
   <div class="container">
-    <h1>GIPHS Search</h1>
+    <div class="jumbotron" id="mainHeading">
+      <h1>GIFs Search</h1>
+    </div>
     <!-- Movies will Get Dumped Dere -->
     <div id="GIPHS-view"></div>
     <!-- Rendered Buttons will get Dumped Here  -->
-    <div id="buttons-view"></div>
+    <!-- <div id="buttons-view"></div> -->
+    <div class="panel panel-default">
+      <div class="panel-heading" id="panelHeading">90s Cartoons</div>
+      <div class="panel-body" id="buttons-view"></div>
+    </div>
 
     <form id="GIPHS-form">
       <label for="GIPHS-input">Add a GIPH</label>
@@ -29,18 +32,15 @@
       <br>
 
       <!-- Button triggers new movie to be added -->
-      <input id="add-GIPHS" type="submit" value="Add a GIPH">
+      <input class="btn btn-default" id="add-GIPHS" type="submit" value="Add a GIPH">
     </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
       // Initial array of GIPHs to search for
-      var GIPHSarray = ["Darth Vader", "Emperor Palpatine", "Naruto", "Kaiba"];
+      var GIPHSarray = ["Dexter's Laboratory", "Ed, Edd n Eddy", "Johnny Bravo", "Rugrats", "Hey Arnold", "The Magic School Bus", "Spongebob Squarepants", "Rocket Power", "The Wild Thornberrys", "CatDog"];
 
-      $("#test").on("click", function() {
-        $("#test").attr("src", "https://media2.giphy.com/media/LSmULmByAQHQs/200.gif");
-      });
-      
+   
       console.log(GIPHSarray);
 
       // displayMovieInfo function re-renders the HTML to display the appropriate content
@@ -49,6 +49,7 @@
         var GIPH = $(this).attr("data-name");
         console.log("Pulled info from the button")
         var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + GIPH + "&api_key=qHQ8d2mSYhfkuVWOa1duti7nFRKF4Zdp&limit=10"
+        
         console.log(queryURL)
 
         // Creating an AJAX call for the specific GIPH button being clicked
@@ -57,10 +58,10 @@
           method: "GET"
         }).then(function(response) {
         
-            $("#GIPHS-view").empty();
+        $("#GIPHS-view").empty();
         for (i=0; i < response.data.length; i++) {
           // Creating a div to hold the movie
-          var GIPHDiv = $("<div class='GIPH'>");
+          var GIPHDiv = $("<div>");
 
           // Storing the rating data
           var rating = response.data[i].rating
@@ -116,14 +117,13 @@
 
         // Looping through the array of GIPHS
         for (var i = 0; i < GIPHSarray.length; i++) {
-            if (GIPHSarray[i].includes(" ") === true) {
-              GIPHSarray[i] = GIPHSarray[i].replace(" ", "+")
-            }
-            // Then dynamicaly generating buttons for each movie in the array
+
             // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
             var a = $("<button>");
             // Adding a class of movie-btn to our button
             a.addClass("GIPH-btn");
+            a.addClass("btn");
+            a.addClass("btn-default");
             // Adding a data-attribute
             a.attr("data-name", GIPHSarray[i]);
             // Providing the initial button text
