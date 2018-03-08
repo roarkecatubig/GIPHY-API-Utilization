@@ -24,6 +24,11 @@ body {
     color: white;
 }
 
+p {
+    font-family: 'Mouse Memoirs', sans-serif;
+    font-size: xx-large;
+}
+
 h1 {
     font-family: 'Mouse Memoirs', sans-serif;
     text-align: center;
@@ -39,7 +44,8 @@ h1 {
 }
 
 .panel-body {
-    background-image: url("../images/90sbackground.jpg")
+    background-image: url("../images/90sbackground.jpg");
+    text-align: center;
 }
 
 label {

@@ -17,7 +17,7 @@
     <div class="jumbotron" id="mainHeading">
       <h1>GIFs Search</h1>
     </div>
-    <!-- Movies will Get Dumped Dere -->
+    <!-- GIFs will Get Dumped Dere -->
     <div id="GIPHS-view"></div>
     <!-- Rendered Buttons will get Dumped Here  -->
     <!-- <div id="buttons-view"></div> -->
@@ -31,28 +31,24 @@
       <input type="text" id="GIPHS-input">
       <br>
 
-      <!-- Button triggers new movie to be added -->
+      <!-- Button when clicked adds new movies -->
       <input class="btn btn-default" id="add-GIPHS" type="submit" value="Add a GIPH">
     </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
-      // Initial array of GIPHs to search for
+
+      // Initial array of GIFs to search for
       var GIPHSarray = ["Dexter's Laboratory", "Ed, Edd n Eddy", "Johnny Bravo", "Rugrats", "Hey Arnold", "The Magic School Bus", "Spongebob Squarepants", "Rocket Power", "The Wild Thornberrys", "CatDog"];
 
-   
-      console.log(GIPHSarray);
-
-      // displayMovieInfo function re-renders the HTML to display the appropriate content
+      // displayGIFInfo function updates the HTML to show the GIFs
       function displayGIPHInfo() {
 
         var GIPH = $(this).attr("data-name");
-        console.log("Pulled info from the button")
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + GIPH + "&api_key=qHQ8d2mSYhfkuVWOa1duti7nFRKF4Zdp&limit=10"
         
-        console.log(queryURL)
 
-        // Creating an AJAX call for the specific GIPH button being clicked
+        // Creating an AJAX call for the specific GIF button being clicked
         $.ajax({
           url: queryURL,
           method: "GET"
@@ -60,34 +56,35 @@
         
         $("#GIPHS-view").empty();
         for (i=0; i < response.data.length; i++) {
-          // Creating a div to hold the movie
+          // Div created to host the GIFs
           var GIPHDiv = $("<div>");
 
-          // Storing the rating data
+          // Storing the rating data to a variable
           var rating = response.data[i].rating
-          console.log(response.data[i].rating)
 
-          // Creating an element to have the rating displayed
-          var pOne = $("<p>").text("Rating: " + rating);
+          // Create p element to display the rating
+          var pOne = $("<p>").text("Rating: " + rating.toUpperCase());
 
-          // Displaying the rating
+          // Adding the rating to the newly created GIPHDiv
           GIPHDiv.append(pOne);
             
-          // Retrieving the URL for the image
+          // Store both the animated URL and static image URL of the GIF to variables
           var imgURL = response.data[i].images.fixed_height_still.url;
           var animatedURL = response.data[i].images.fixed_height.url;
           console.log(animatedURL)
         
-          // Creating an element to hold the image
+          // Create an img element that will store the initial still image as it's source as well as an animated URL that it will switch to.
           var image = $("<img class='animate'>").attr({"src": imgURL, "data-still": imgURL, "data-animate": animatedURL, "data-state": "still"});
           
-          // Appending the image
+          // Adding the newly created img element to the GIPHDiv created earlier.
           GIPHDiv.append(image);
           
+          // Jquery to finally update the page to add all the ratings and GIFs to the element with id "GIPHS-view"
           $("#GIPHS-view").prepend(GIPHDiv);
 
             }
-
+          
+          // On click event handlers that will start and pause GIFs based on user clicks. Clicks adjusts the src attribute of the originally created img tag and switches it's "state"
           $(".animate").on("click", function() {
             var state = $(this).attr("data-state")
             console.log(state)
@@ -108,51 +105,49 @@
 
       }
 
-      // Function for displaying movie data
+      // Function to create buttons that contain the categories that we'll search on the GIPHY API
       function renderButtons() {
 
-        // Deleting the movies prior to adding new movies
-        // (this is necessary otherwise you will have repeat buttons)
+        // Deletes what buttons was previously there and recreates all the buttons with any new buttons that were added
         $("#buttons-view").empty();
 
-        // Looping through the array of GIPHS
+        // Looping through the array of GIFs
         for (var i = 0; i < GIPHSarray.length; i++) {
 
-            // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
             var a = $("<button>");
-            // Adding a class of movie-btn to our button
+            // Adding a classes for buttons so it can be called with Jquery and styled with Bootstrap
             a.addClass("GIPH-btn");
             a.addClass("btn");
             a.addClass("btn-default");
-            // Adding a data-attribute
+            // Adding data attribute to each of the buttons based on the index of the element in the GIPHSarray
             a.attr("data-name", GIPHSarray[i]);
             // Providing the initial button text
             a.text(GIPHSarray[i]);
-            // Adding the button to the buttons-view div
+            // Adding buttons to the div
             $("#buttons-view").append(a);
             }
 
         }
     
 
-      // This function handles events where a GIPH button is clicked
+      // Event handlers when user clicks add GIF to add GIF.
       
       $("#add-GIPHS").on("click", function(event) {
         event.preventDefault();
         // This line grabs the input from the textbox
         var GIPH = $("#GIPHS-input").val().trim();
 
-        // Adding movie from the textbox to our array
+        // Adds user input in the text box to the array
         GIPHSarray.push(GIPH);
 
-        // Calling renderButtons which handles the processing of our movie array
+        // Initalizes function to immediately display the added button
         renderButtons();
       });
 
-      // Adding a click event listener to all elements with a class of "movie-btn"
+      // On click event handler for when a GIF button is clicked.
       $(document).on("click", ".GIPH-btn", displayGIPHInfo);
 
-      // Calling the renderButtons function to display the intial buttons
+      // Initial array of GIFs is displayed regardless of if the user adds GIFs
       renderButtons();
     </script>
   </div>
