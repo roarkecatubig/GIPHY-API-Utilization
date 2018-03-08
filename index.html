@@ -20,7 +20,6 @@
     <h1>GIPHS Search</h1>
     <!-- Movies will Get Dumped Dere -->
     <div id="GIPHS-view"></div>
-    <img id="test" src="https://media2.giphy.com/media/LSmULmByAQHQs/200_s.gif">
     <!-- Rendered Buttons will get Dumped Here  -->
     <div id="buttons-view"></div>
 
@@ -38,11 +37,6 @@
       // Initial array of GIPHs to search for
       var GIPHSarray = ["Darth Vader", "Emperor Palpatine", "Naruto", "Kaiba"];
 
-    //   for (i=0; i < GIPHSarray.length; i++) {
-    //       if (GIPHSarray[i].includes(" ") === true) {
-    //           GIPHSarray[i] = GIPHSarray[i].replace(" ", "+")
-    //       }
-    //   }
       $("#test").on("click", function() {
         $("#test").attr("src", "https://media2.giphy.com/media/LSmULmByAQHQs/200.gif");
       });
@@ -62,9 +56,9 @@
           url: queryURL,
           method: "GET"
         }).then(function(response) {
-
+        
             $("#GIPHS-view").empty();
-            for (i=0; i < response.data.length; i++) {
+        for (i=0; i < response.data.length; i++) {
           // Creating a div to hold the movie
           var GIPHDiv = $("<div class='GIPH'>");
 
@@ -77,30 +71,38 @@
 
           // Displaying the rating
           GIPHDiv.append(pOne);
-
+            
           // Retrieving the URL for the image
           var imgURL = response.data[i].images.fixed_height_still.url;
           var animatedURL = response.data[i].images.fixed_height.url;
+          console.log(animatedURL)
         
-        // $(document).on("click", function() {
-        //   $(".animate").attr("src", animatedURL);
-        // });
-
           // Creating an element to hold the image
-          var image = $("<img class='animate'>").attr("src", imgURL);
-          image.attr("data-name", GIPHSarray[i]);
-
-          $(this).on("click", function() {
-            image.src = animatedURL
-          });
-
+          var image = $("<img class='animate'>").attr({"src": imgURL, "data-still": imgURL, "data-animate": animatedURL, "data-state": "still"});
+          
           // Appending the image
           GIPHDiv.append(image);
-
-          // Putting the entire movie above the previous movies
+          
           $("#GIPHS-view").prepend(GIPHDiv);
 
             }
+
+          $(".animate").on("click", function() {
+            var state = $(this).attr("data-state")
+            console.log(state)
+
+          if  (state === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+            
+          }
+
+          else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+
+        }
+          });
         });
 
       }
@@ -116,7 +118,7 @@
         for (var i = 0; i < GIPHSarray.length; i++) {
             if (GIPHSarray[i].includes(" ") === true) {
               GIPHSarray[i] = GIPHSarray[i].replace(" ", "+")
-            }   
+            }
             // Then dynamicaly generating buttons for each movie in the array
             // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
             var a = $("<button>");
